@@ -8,7 +8,7 @@ TRAIN_CURRENT_BATCH = -1
 
 """ Read Tensorflow MNIST test datasets
     x_train， x_test are arrays of 28x28 2-d images, I need to convert them into arrays of vectors (size 784) 
-    y_train,  y_test are arrays of result，I need to convert them into array of [0.,0.,0.,0.,0.,0.,0.,0.,0.,0.] vctor for matrix multiplication, the position with result would be set to weight 1
+    y_train,  y_test are arrays of result，I need to convert them into array of [0.,0.,0.,0.,0.,0.,0.,0.,0.,0.] vector for matrix multiplication, the position with result would be set to weight 1
 """
 mnist = tf.keras.datasets.mnist
 (x_train, y_train),(x_test, y_test) = mnist.load_data()
@@ -69,10 +69,10 @@ y_pred = tf.matmul(x, W)
 """ now we find the differences between model and true value """ 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=y_pred, labels=y_true))
 
-""" adjust the A matrix to optimize the rersult """ 
+""" adjust the A matrix to optimize the result """ 
 gd_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
-""" the maz value in y vector （b） is the predicting result """ 
+""" the max value in y vector （b） is the predicting result """ 
 correct_mask = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y_true, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_mask, tf.float32))
 
@@ -80,7 +80,7 @@ with tf.Session() as sess:
     # start the training
     sess.run(tf.global_variables_initializer())
 
-    """ I feed the engine with 50000 vectors, let the engine to calculate the best matrix A """ 
+    """ I feed the engine with 50000 vectors, let the engine calculate the best matrix A """ 
     for _ in range(NUM_STEPS):
         batch_xs, batch_ys = train_next_batch()
         sess.run(gd_step, feed_dict={x: batch_xs, y_true: batch_ys})
